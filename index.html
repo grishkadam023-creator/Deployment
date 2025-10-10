@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Disaster Relief</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ff512f, #f09819);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    h2 {
+      text-align: center;
+      color: #ef4444;
+      margin-bottom: 20px;
+    }
+    .roles {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .role {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .role.active {
+      border: 2px solid #ef4444;
+      color: #ef4444;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #dc2626;
+    }
+    p {
+      text-align: center;
+      margin-top: 10px;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Sign In</h2>
+    <div class="roles">
+      <div class="role active" id="victim" onclick="selectRole('victim')">Victim</div>
+      <div class="role" id="volunteer" onclick="selectRole('volunteer')">Volunteer</div>
+    </div>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Sign In</button>
+    <p>Don’t have an account? <a href="register.html">Register</a></p>
+    <p id="msg" style="text-align:center;color:red;"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase connection
+    const SUPABASE_URL = "https://xnappxdmcfppdulxclts.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let selectedRole = "victim";
+
+    function selectRole(role) {
+      selectedRole = role;
+      document.querySelectorAll(".role").forEach(el => el.classList.remove("active"));
+      document.getElementById(role).classList.add("active");
+    }
+
+    async function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+      if (!username || !password) {
+        msg.textContent = "Please fill all fields.";
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("username", username)
+          .eq("password", password)
+          .maybeSingle();
+
+        if (error || !data) {
+          msg.textContent = "Invalid username or password.";
+          return;
+        }
+
+        // Match the selected role with stored role
+        if (data.role !== selectedRole) {
+          msg.textContent = `This account is registered as a ${data.role}. Please select ${data.role} role.`;
+          return;
+        }
+
+        // Redirect based on actual role
+        alert("Login successful!");
+        if (data.role === "victim") {
+          window.location.href = "mobileaccess.html";
+        } else if (data.role === "volunteer") {
+          window.location.href = "LandingPage.html";
+        }
+      } catch (err) {
+        msg.textContent = "Error logging in. Please try again.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

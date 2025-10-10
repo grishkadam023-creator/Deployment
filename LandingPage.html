@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disaster Relief Coordination Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9fafb;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #e53935, #fb8c00);
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero p.subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      opacity: 0.9;
+    }
+
+    .hero p.desc {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .hero .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .hero button, .hero a {
+      padding: 14px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .report-btn {
+      background: #fff;
+      color: #e53935;
+    }
+    .report-btn:hover {
+      background: #ffeaea;
+      transform: scale(1.05);
+    }
+
+    .volunteer-btn {
+      background: #c62828;
+      color: #fff;
+      border: 2px solid white;
+    }
+    .volunteer-btn:hover {
+      background: #b71c1c;
+      transform: scale(1.05);
+    }
+
+    .mobile-btn {
+      background: #ef6c00;
+      color: white;
+    }
+    .mobile-btn:hover {
+      background: #e65100;
+      transform: scale(1.05);
+    }
+
+    /* Stats Section */
+    .stats {
+      background: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .stats h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+      color: #222;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      padding: 30px;
+      border-radius: 15px;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .red {
+      background: linear-gradient(135deg, #e53935, #d32f2f);
+    }
+    .blue {
+      background: linear-gradient(135deg, #1e88e5, #1565c0);
+    }
+    .green {
+      background: linear-gradient(135deg, #43a047, #2e7d32);
+    }
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .stat-card p {
+      margin-top: 8px;
+      opacity: 0.9;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    /* Features Section */
+    .features {
+      background: #f4f4f4;
+      padding: 90px 20px;
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 60px;
+      color: #222;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      width: 55px;
+      height: 55px;
+      background: #ffeaea;
+      color: #e53935;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 15px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .feature-card p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .stats h2, .features h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h1>Real-Time Disaster Relief Coordination Portal</h1>
+    <p class="subtitle">Connecting Victims, Volunteers, and Authorities in Real-Time</p>
+    <p class="desc">
+      A comprehensive platform designed to coordinate emergency response efforts,
+      match resources with needs, and facilitate communication during disasters.
+    </p>
+
+    <div class="buttons">
+      <a href="dashboard.html" class="report-btn">Report Emergency</a>
+      <a href="volunteer.html" class="volunteer-btn">Join as Volunteer</a>
+      <a href="mobileaccess.html" class="mobile-btn">📱 Access Mobile App</a>
+    </div>
+  </section>
+
+  <!-- STATS SECTION -->
+  <section class="stats">
+    <h2>Live Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-card red">
+        <h3 id="disasterCount">0</h3>
+        <p>Active Disasters</p>
+      </div>
+      <div class="stat-card blue">
+        <h3 id="volunteerCount">0</h3>
+        <p>Volunteers Available</p>
+      </div>
+      <div class="stat-card green">
+        <h3 id="resourceCount">8,932</h3>
+        <p>Resources Distributed</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features">
+    <h2>Platform Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Emergency Dashboard</h3>
+        <p>Real-time map tracking active emergencies with location-based updates.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Volunteer Matching</h3>
+        <p>Intelligent matching of volunteers based on skills and proximity.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Resource Allocation</h3>
+        <p>Smart resource distribution to areas of greatest need.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Communication Hub</h3>
+        <p>Real-time communication between all stakeholders.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://xnappxdmcfppdulxclts.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO';
+
+    // Initialize Supabase client
+    let supabase;
+    try {
+      if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('Supabase client initialized successfully.');
+      } else {
+        throw new Error('Supabase SDK not loaded.');
+      }
+    } catch (error) {
+      console.error('Failed to initialize Supabase client:', error);
+      // Fallback: Set stats to 0 or hardcoded values
+      document.getElementById('disasterCount').textContent = '0';
+      document.getElementById('volunteerCount').textContent = '0';
+    }
+
+    async function updateStats() {
+      // Fetch resources count
+const { data: resourceData, error: resourceError } = await supabase
+  .from('resources_distributed')
+  .select('count')
+  .eq('id', 1)
+  .single();
+
+if (resourceError) {
+  console.error('Error fetching resource count:', resourceError);
+  document.getElementById('resourceCount').textContent = '0';
+} else {
+  document.getElementById('resourceCount').textContent = (resourceData.count || 0).toLocaleString();
+}
+
+      if (!supabase) {
+        console.error('Supabase client not available. Skipping stats update.');
+        return;
+      }
+
+      try {
+        // Count active disasters (from sos_reports table - assumes it exists)
+        const { count: disasterCount, error: disasterError } = await supabase
+          .from('sos_reports')
+          .select('*', { count: 'exact', head: true });
+
+        if (disasterError) {
+          console.error('Error fetching disaster count:', disasterError);
+          // Fallback to 0
+          document.getElementById('disasterCount').textContent = '0';
+        } else {
+          console.log('Disaster count:', disasterCount);
+          document.getElementById('disasterCount').textContent = disasterCount || '0';
+        }
+
+        // Count volunteers (from volunteers table - assumes it exists)
+        const { count: volunteerCount, error: volunteerError } = await supabase
+          .from('volunteers')
+          .select('*', { count: 'exact', head: true });
+
+        if (volunteerError) {
+          console.error('Error fetching volunteer count:', volunteerError);
+          // Fallback to 0
+          document.getElementById('volunteerCount').textContent = '0';
+        } else {
+          console.log('Volunteer count:', volunteerCount);
+          document.getElementById('volunteerCount').textContent = (volunteerCount || 0).toLocaleString();
+        }
+
+        // Optional: Count resources distributed (uncomment if you have a 'resources' table)
+        /*
+        const { count: resourceCount, error: resourceError } = await supabase
+          .from('resources')
+          .select('*', { count: 'exact', head: true });
+
+        if (resourceError) {
+          console.error('Error fetching resource count:', resourceError);
+        } else {
+          document.getElementById('resourceCount').textContent = (resourceCount || 0).toLocaleString();
+        }
+        */
+
+      } catch (error) {
+        console.error('Error in updateStats:', error);
+      }
+    }
+
+    // Initial fetch on page load
+    if (supabase) {
+      updateStats();
+      // Auto-refresh every 10 seconds
+      setInterval(updateStats, 10000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile App</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #fff7ed;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #ff512f, #f09819);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    header nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    header nav a:hover {
+      opacity: 0.8;
+    }
+
+    section {
+      flex: 1;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: #f97316;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #ea580c;
+    }
+
+    footer {
+      background: #1e293b;
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      margin-top: auto;
+      border-top: 4px solid #f97316;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Access Mobile App</h1>
+    <nav>
+    
+    </nav>
+  </header>
+
+  <section>
+    <h2>Stay Connected Anytime</h2>
+    <div class="grid grid-2" style="max-width:1000px;margin:auto;">
+      <div class="card">
+        <h3>📲 Download the App</h3>
+        <p>Get instant updates, report emergencies, and stay connected even offline.</p>
+        <a href="https://drive.google.com/drive/folders/1ufjTjY9Mu0yn8O2Jg6VSsly12KrDs7l3" 
+           class="btn">Download Now</a>
+      </div>
+      <div class="card">
+        <h3>🌐 Sync with Web Portal</h3>
+        <p>All your data automatically syncs with our main disaster relief portal when you're online.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Disaster Relief Portal | All Rights Reserved
+  </footer>
+</body>
+</html>

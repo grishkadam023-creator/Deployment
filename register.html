@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Disaster Relief</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ff512f, #f09819);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    h2 {
+      text-align: center;
+      color: #ef4444;
+      margin-bottom: 20px;
+    }
+    .roles {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .role {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .role.active {
+      border: 2px solid #ef4444;
+      color: #ef4444;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #dc2626;
+    }
+    p {
+      text-align: center;
+      margin-top: 10px;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Register</h2>
+    <div class="roles">
+      <div class="role active" id="victim" onclick="selectRole('victim')">Victim</div>
+      <div class="role" id="volunteer" onclick="selectRole('volunteer')">Volunteer</div>
+    </div>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="register()">Sign Up</button>
+    <p>Already have an account? <a href="index.html">Login</a></p>
+    <p id="msg" style="text-align:center;color:red;"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase setup
+    const SUPABASE_URL = 'https://xnappxdmcfppdulxclts.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Default role
+    let selectedRole = 'victim';
+
+    // Toggle between Victim / Volunteer
+    function selectRole(role) {
+      selectedRole = role;
+      document.querySelectorAll('.role').forEach(r => r.classList.remove('active'));
+      document.getElementById(role).classList.add('active');
+    }
+
+    // Register user
+    async function register() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+
+      if (!username || !password) {
+        msg.textContent = 'All fields are required.';
+        return;
+      }
+
+      // Insert into Supabase
+      const { data, error } = await supabase
+        .from('users')
+        .insert([{ username, password, role: selectedRole }]);
+
+      if (error) {
+        msg.textContent = 'Error: ' + error.message;
+      } else {
+        alert('Registration successful! Redirecting to login...');
+        // Small delay to show the alert before redirect
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>

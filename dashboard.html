@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Disaster Relief Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-dark: #0E1217;
+    --bg-card: rgba(255,255,255,0.05);
+    --primary: #00ADB5;
+    --accent: #EEEEEE;
+    --text-light: #F1F1F1;
+    --danger: #FF4C4C;
+    --glass-blur: blur(14px);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0E1217, #1E242B);
+    color: var(--accent);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  header {
+    background: rgba(15, 20, 25, 0.9);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--primary);
+    padding: 28px 0;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  /* Loading */
+  #loading {
+    text-align: center;
+    margin: 80px 0;
+    color: var(--accent);
+    font-size: 20px;
+  }
+
+  .spinner {
+    border: 5px solid rgba(255,255,255,0.1);
+    border-top: 5px solid var(--primary);
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    margin: 25px auto;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { 0% {transform: rotate(0);} 100% {transform: rotate(360deg);} }
+
+  /* Alerts */
+  .alerts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    justify-content: center;
+  }
+
+  .alert-card {
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 5px solid var(--danger);
+    border-radius: 16px;
+    padding: 22px 26px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 350px;
+    transition: all 0.35s ease;
+    transform: translateY(0);
+    opacity: 0;
+    animation: fadeIn 0.6s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .alert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0,173,181,0.3);
+  }
+
+  .alert-info span {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--accent);
+  }
+
+  .alert-info span.label {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--danger);
+    margin-bottom: 10px;
+  }
+
+  .done-btn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .done-btn:hover {
+    background: #04c7d1;
+    transform: scale(1.05);
+  }
+
+  /* Table */
+  .table-container {
+    margin-top: 50px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 16px 20px;
+    text-align: left;
+  }
+
+  th {
+    background: rgba(255,255,255,0.1);
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  tr:nth-child(even) {
+    background: rgba(255,255,255,0.02);
+  }
+
+  tr:hover {
+    background: rgba(0,173,181,0.05);
+  }
+
+  /* Empty State */
+  .no-alerts {
+    text-align: center;
+    margin: 80px 0;
+    font-size: 22px;
+    color: var(--accent);
+    opacity: 0.8;
+    animation: fadeIn 0.5s forwards;
+  }
+
+  .no-alerts::before {
+    content: "⚡";
+    font-size: 40px;
+    display: block;
+    margin-bottom: 10px;
+    color: var(--primary);
+  }
+
+  @media (max-width: 768px) {
+    header { font-size: 26px; }
+    .alert-card { max-width: 100%; }
+    th, td { font-size: 14px; padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>🌐 Disaster Relief Dashboard</header>
+
+<div class="container">
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Fetching live disaster alerts...</p>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alerts" id="alerts"></div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Location</th>
+          <th>Message</th>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://xnappxdmcfppdulxclts.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO';
+  const { createClient } = supabase;
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const alertsDiv = document.getElementById('alerts');
+  const tableBody = document.querySelector('#data-table tbody');
+  const loadingDiv = document.getElementById('loading');
+
+  function formatTime(timestamp) {
+    return new Date(timestamp).toLocaleString();
+  }
+
+  function renderEntry(entry) {
+    const card = document.createElement('div');
+    card.className = 'alert-card';
+    card.id = `alert-${entry.id}`;
+    card.innerHTML = `
+      <div class="alert-info">
+        <span class="label">🚨 SOS ALERT</span>
+        <span><strong>Name:</strong> ${entry.name}</span>
+        <span><strong>Phone:</strong> ${entry.phone}</span>
+        <span><strong>Location:</strong> ${entry.location}</span>
+        <span><strong>Message:</strong> ${entry.message}</span>
+        <span><strong>Time:</strong> ${formatTime(entry.created_at)}</span>
+      </div>
+      <button class="done-btn">Done</button>
+    `;
+    alertsDiv.prepend(card);
+
+    const row = document.createElement('tr');
+    row.id = `row-${entry.id}`;
+    row.innerHTML = `
+      <td>${entry.id}</td>
+      <td>${entry.name}</td>
+      <td>${entry.phone}</td>
+      <td>${entry.location}</td>
+      <td>${entry.message}</td>
+      <td>${formatTime(entry.created_at)}</td>
+      <td><button class="done-btn">Done</button></td>
+    `;
+    tableBody.prepend(row);
+
+    card.querySelector('.done-btn').addEventListener('click', () => deleteEntry(entry.id));
+    row.querySelector('.done-btn').addEventListener('click', () => deleteEntry(entry.id));
+  }
+
+  async function fetchEntries() {
+    const { data, error } = await supabaseClient.from('sos_reports').select('*').order('id', { ascending: false });
+    if (error) { console.error(error); return; }
+
+    alertsDiv.innerHTML = '';
+    tableBody.innerHTML = '';
+
+    if (data.length === 0) {
+      loadingDiv.style.display = 'none';
+      alertsDiv.innerHTML = `<div class="no-alerts">No active SOS alerts. Stay prepared!</div>`;
+    } else {
+      loadingDiv.style.display = 'none';
+      data.forEach(entry => renderEntry(entry));
+    }
+  }
+
+  async function deleteEntry(id) {
+    async function deleteEntry(id) {
+  try {
+    // Delete SOS report
+    const { error: deleteError } = await supabaseClient
+      .from('sos_reports')
+      .delete()
+      .eq('id', id);
+    if (deleteError) throw deleteError;
+
+    // Fetch current resources count
+    const { data: resourceData, error: fetchError } = await supabaseClient
+      .from('resources_distributed')
+      .select('count')
+      .eq('id', 1)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Increment count
+    const newCount = (resourceData.count || 0) + 1;
+
+    // Update resources count
+    const { error: updateError } = await supabaseClient
+      .from('resources_distributed')
+      .update({ count: newCount })
+      .eq('id', 1);
+
+    if (updateError) throw updateError;
+
+    // Remove card and table row
+    document.getElementById(`alert-${id}`)?.remove();
+    document.getElementById(`row-${id}`)?.remove();
+
+    console.log('Resources Distributed incremented to:', newCount);
+
+  } catch (err) {
+    console.error('Error deleting entry or updating resources:', err);
+  }
+}
+
+    const { error } = await supabaseClient.from('sos_reports').delete().eq('id', id);
+    if (error) { console.error(error); return; }
+    document.getElementById(`alert-${id}`)?.remove();
+    document.getElementById(`row-${id}`)?.remove();
+  }
+
+  supabaseClient
+    .channel('sos_realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'sos_reports' }, () => fetchEntries())
+    .subscribe();
+
+  fetchEntries();
+</script>
+</body>
+</html>

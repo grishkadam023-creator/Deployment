@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join as Volunteer</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e53935, #fb8c00);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffe082;
+    }
+
+    section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    p {
+      max-width: 700px;
+      margin: auto;
+      opacity: 0.9;
+    }
+
+    form {
+      margin-top: 40px;
+      max-width: 500px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.3s;
+      backdrop-filter: blur(10px);
+      appearance: none;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    select option {
+      background-color: #e53935;
+      color: #fff;
+    }
+
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.03);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: #e53935;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #ffeaea;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Volunteer Registration</h1>
+    <nav>
+      <a href="LandingPage.html">Home</a>
+      <a href="dashboard.html">Report Emergency</a>
+      <a href="mobile.html">Mobile App</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Become a Volunteer</h2>
+    <p>Help people affected by disasters. Join our network and contribute your time, skills, and compassion.</p>
+
+    <form id="volunteerForm">
+      <input type="text" id="fullName" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="text" id="location" placeholder="Location" required />
+      <select id="skill" required>
+        <option value="">Select Skill</option>
+        <option value="Medical">Medical</option>
+        <option value="Rescue Operations">Rescue Operations</option>
+        <option value="Resource Distribution">Resource Distribution</option>
+        <option value="Technical Support">Technical Support</option>
+      </select>
+      <button type="submit">Register Now</button>
+    </form>
+  </section>
+
+  <footer>© 2025 Disaster Relief Portal</footer>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://xnappxdmcfppdulxclts.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Handle form submission
+    const form = document.getElementById('volunteerForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Get form values
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const skill = document.getElementById('skill').value;
+
+      if (!fullName || !email || !password || !location || !skill) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Optional: hash password before storing (for better security)
+      // Using built-in browser crypto:
+      async function hashPassword(pwd) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(pwd);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+      }
+
+      const hashedPassword = await hashPassword(password);
+
+      try {
+        const { data, error } = await supabase
+          .from('volunteers')
+          .insert([
+            { full_name: fullName, email, password: hashedPassword, location, skill }
+          ]);
+
+        if (error) throw error;
+
+        alert('Registration successful! Thank you for volunteering.');
+        form.reset();
+      } catch (error) {
+        console.error('Insert error:', error);
+        alert(`Registration failed: ${error.message || 'Unknown error'}`);
+      }
+    });
+  </script>
+</body>
+</html>

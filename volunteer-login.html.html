@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Login - Disaster Relief Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e53935, #fb8c00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .login-box {
+      background: rgba(255,255,255,0.1);
+      padding: 40px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    h2 {margin-bottom: 25px;}
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      background: #fff;
+      color: #e53935;
+      border: none;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #ffeaea;
+      transform: scale(1.03);
+    }
+
+    .error {
+      margin-top: 10px;
+      color: #ffcccc;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Volunteer Login</h2>
+    <input type="email" id="email" placeholder="Volunteer Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="loginVolunteer()">Sign In</button>
+    <p class="error" id="error"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://xnappxdmcfppdulxclts.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_VfZSuGkv8WUBdGlRA2XFMg_Kx-0vUHO';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loginVolunteer() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorBox = document.getElementById('error');
+      errorBox.textContent = '';
+
+      // Step 1: Sign in using Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errorBox.textContent = 'Invalid email or password.';
+        return;
+      }
+
+      // Step 2: Check if this email is in volunteers table
+      const { data: volunteerData, error: volunteerError } = await supabase
+        .from('volunteers')
+        .select('id')
+        .eq('email', email)
+        .single();
+
+      if (volunteerError || !volunteerData) {
+        errorBox.textContent = 'Access denied. Only registered volunteers can log in.';
+        await supabase.auth.signOut();
+        return;
+      }
+
+      // Step 3: Redirect to dashboard
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>
